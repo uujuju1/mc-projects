@@ -1,5 +1,5 @@
-import {Colors, WhiteLabel} from '../styles';
-import {Rect, RectProps, Txt} from '@motion-canvas/2d/lib/components';
+import {Colors, WhiteLabel, BlackLabel} from '../styles';
+import {Rect, RectProps, Txt, Img} from '@motion-canvas/2d/lib/components';
 import {makeRef, makeRefs} from '@motion-canvas/core/lib/utils';
 
 interface ContainerRefs {
@@ -10,6 +10,19 @@ interface ContainerRefs {
 export interface ContainerProps extends RectProps {
   label?: string;
   refs?: ContainerRefs;
+}
+
+export function LabeledBox({ name, src, color, ref, ...props}: {
+    name: string;
+    src: string;
+    color: string;
+} & RectProps) {
+    return (
+        <Rect layout radius={8} ref={ref} {...props}>
+            <Img opacity={0.87} width={40} height={40} margin={20} src={src} />
+            <Txt paddingRight={40} {...BlackLabel} fill={color} lineHeight={80} cache>{name}</Txt>
+        </Rect>
+    );
 }
 
 export function Container({

@@ -20,6 +20,7 @@ export const Colors = {
   COMMENT: '#808586',
 
   red: '#ef5350',
+  redopac: 'rgba(239, 83, 80, 0.2)',
   green: '#8bc34a',
   blue: '#2196f3',
   sage: '#D395F5',

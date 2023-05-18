@@ -6,7 +6,7 @@ import {createRef, makeRef} from '@motion-canvas/core/lib/utils';
 import {createSignal} from '@motion-canvas/core/lib/signals';
 
 import {BlackLabel, WhiteLabel, Colors} from '../styles'
-import {Container} from '../components/Container';
+import {Container, LabeledBox} from '../components/Container';
 import {Dialog} from '../components/Dialog';
 
 import box from '../images/Item-icon.svg';
@@ -22,36 +22,23 @@ export default makeScene2D(function* (view) {
 
     const boxes: LabeledBox = [];
 
-    function LabeledBox({ name, src, color, ref, ...props}: {
-        name: string;
-        src: string;
-        color: string;
-    } & RectProps) {
-        return (
-            <Rect layout fill={color} radius={8} ref={ref} {...props}>
-                <Img opacity={0.87} width={40} height={40} margin={20} src={src} />
-                <Txt paddingRight={40} {...BlackLabel} lineHeight={80} cache>{name}</Txt>
-            </Rect>
-        );
-    }
-
     view.add(
         <>
             <Rect layout clip fill={Colors.surface} size={[368, () => 320 * sizeScl()]} position={[() => -214 * distanceScl(), 0]} radius={10}>
                 <Container label="BUILDS">
-                    <LabeledBox src={box} name="Building#1" color={Colors.red}/>
-                    <LabeledBox src={box} name="Building#2" color={Colors.red}/>
+                    <LabeledBox src={box} name="Building#1" fill={Colors.red}/>
+                    <LabeledBox src={box} name="Building#2" fill={Colors.red}/>
                 </Container>
             </Rect>
             <Rect layout clip fill={Colors.surface} size={[300, () => 220 * sizeScl()]} position={[() => 200 * distanceScl(), 0]} radius={10}>
                 <Container label="LINKS">
-                    <LabeledBox src={box} name="Link#1" color={Colors.FUNCTION}/>
+                    <LabeledBox src={box} name="Link#1" fill={Colors.FUNCTION}/>
                 </Container>
             </Rect>
             <Rect layout clip ref={updateBox} fill={Colors.surface} height={0} radius={10}>
                 <Container label="UPDATE()">
-                    <LabeledBox ref={makeRef(boxes, 0)} src={method} name="PropagateSpeed" color={Colors.sage}/>
-                    <LabeledBox ref={makeRef(boxes, 1)} src={method} name="UpdateSpeed" color={Colors.sage}/>
+                    <LabeledBox ref={makeRef(boxes, 0)} src={method} name="PropagateSpeed" fill={Colors.sage}/>
+                    <LabeledBox ref={makeRef(boxes, 1)} src={method} name="UpdateSpeed" fill={Colors.sage}/>
                 </Container>
             </Rect>
 
@@ -60,11 +47,11 @@ export default makeScene2D(function* (view) {
                     <Rect height={150}>
                         <Rect layout={false}>
                             <Line stroke={Colors.background} lineWidth={10} radius={80} points={[[-50, 0], [75, 0]]}/>
-                            <Circle stroke={Colors.sage} lineWidth={10} position={[100, 0]} size={[50, 50]}>
-                                <Circle fill={Colors.sage} size={[() => 50 / (1 + (1 - updateProgress())), () =>  50 / (1 + (1 - updateProgress()))]}/>
+                            <Circle stroke={Colors.sage} lineWidth={10} position={[100, 0]} size={50}>
+                                <Circle fill={Colors.sage} size={() => 50 / (1 + (1 - updateProgress()))}/>
                             </Circle>
-                            <Circle stroke={Colors.sage} lineWidth={10} position={[-100, 0]} size={[100, 100]}>
-                                <Circle fill={Colors.sage} size={[() => (1 - updateProgress()) * 50, () => (1 - updateProgress()) * 50]}/>
+                            <Circle stroke={Colors.sage} lineWidth={10} position={[-100, 0]} size={100}>
+                                <Circle fill={Colors.sage} size={() => (1 - updateProgress()) * 50}/>
                             </Circle>
                         </Rect>
                     </Rect>
@@ -87,24 +74,18 @@ export default makeScene2D(function* (view) {
     view.add(
         <Dialog ref={dialog} y={440} initialIndex={0} opacity={0} texts={[
             <Txt/>,
-            <Txt {...WhiteLabel}>
-            {`
-            The graph stores the buildins it has in two
-            different forms: in links and in actual buildings.
-            `}
-            </Txt>,
-            <Txt {...WhiteLabel}>
-            {`
-            Both of these Arrays are used in the graph's update()
-            method. It uses them to spread speed and update it.
-            `}
-            </Txt>,
-            <Txt {...WhiteLabel}>
-            {`
-            Speed is spread between links by calculating the average of the two
-            buildings inside it. Speed also get slower over time when it's updated.
-            `}
-            </Txt>
+            <Txt {...WhiteLabel}>{
+            `The graph stores the buildins it has in two
+            different forms: in links and in actual buildings.`
+            }</Txt>,
+            <Txt {...WhiteLabel}>{
+            `Both of these Arrays are used in the graph's update()
+            method. It uses them to spread speed and update it.`
+            }</Txt>,
+            <Txt {...WhiteLabel}>{
+            `Speed is spread between links by calculating the average of the two
+            buildings inside it. Speed also get slower over time when it's updated.`
+            }</Txt>
         ]}/>
     );
 

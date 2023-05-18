@@ -11,13 +11,13 @@ const medium = "968EB4";
 const cloud = "FFF8";
 const bg = "141414";
 export default makeScene2D(function* (view) {
-    const signal1 = createSignal(0);
+    const signal1 = createSignal(1);
     const base = createRef();
     const background = createRef();
 
     view.add(
-        <Rect clip ref={background} size={[200, 200]} radius={50}>
-            <Circle ref={base} fill={light} size={[250, 250]} y={300}/>
+        <Rect clip ref={background} radius={50}>
+            <Circle ref={base} fill={light} size={[250, 250]}/>
             <Circle fill={medium} size={[() => signal1() * 40, () => signal1() * 40]} position={[-20, -30]}/>
             <Circle fill={medium} size={[() => signal1() * 20, () => signal1() * 20]} position={[-70, 0]}/>
             <Rect fill={cloud} size={[250, () => signal1() * 40]} position={[-35, -110]} rotation={-50}/>
@@ -27,8 +27,11 @@ export default makeScene2D(function* (view) {
         </Rect>
     );
 
-    yield* base().position.y(0, 1);
-    yield signal1(1, 1);
+    yield* all(background().width(200, 1), background().height(200, 1));
+    yield signal1(0, 1);
     yield* waitFor(2);
-    yield* all(background().width(0, 1), background().height(0, 1));
+    yield* base().position.y(300, 1);
+
+
+    
 });

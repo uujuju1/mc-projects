@@ -5,7 +5,7 @@ import {all, waitFor} from '@motion-canvas/core/lib/flow';
 import {createRef, range, useLogger} from '@motion-canvas/core/lib/utils';
 import {createSignal} from '@motion-canvas/core/lib/signals';
 
-import {Container} from '../components/Container';
+import {Container, LabeledBox} from '../components/Container';
 import {Dialog} from '../components/Dialog';
 import {BlackLabel, WhiteLabel, Colors} from '../styles'
 
@@ -24,20 +24,6 @@ export default makeScene2D(function* (view) {
 
     const radiusSignal = createSignal(0);
 
-    // slightly modified pass
-    function Module({ name, src, color, ref, ...props}: {
-        name: string;
-        src: string;
-        color: string;
-    } & RectProps) {
-        return (
-            <Rect layout fill={color} radius={8} ref={ref} {...props}>
-                <Img opacity={0.87} width={40} height={40} margin={20} src={src} />
-                <Txt paddingRight={40} {...BlackLabel} lineHeight={80} cache>{name}</Txt>
-            </Rect>
-        );
-    }
-
     // the animation
     yield view.add(
         <>
@@ -45,12 +31,12 @@ export default makeScene2D(function* (view) {
             <Rect ref={renderer} layout clip height={0}>
                 <Container label="BUILDING MODULES">
                     <Node ref={module}>
-                        <Module color={Colors.sage} name="Item Module" src={itemModule} />
-                        <Module color={Colors.sage} name="Liquid Module" src={liquidModule} />
-                        <Module color={Colors.sage} name="Power Module" src={powerModule} />
-                        <Module color={Colors.sage} name="Heat Module" src={heatModule} />
+                        <LabeledBox fill={Colors.sage} name="Item Module" src={itemModule} />
+                        <LabeledBox fill={Colors.sage} name="Liquid Module" src={liquidModule} />
+                        <LabeledBox fill={Colors.sage} name="Power Module" src={powerModule} />
+                        <LabeledBox fill={Colors.sage} name="Heat Module" src={heatModule} />
                     </Node>
-                    <Module color={Colors.sage} name="Spin Module" src={spinModule} />
+                    <LabeledBox fill={Colors.sage} name="Spin Module" src={spinModule} />
                 </Container>
             </Rect>
 
@@ -86,10 +72,10 @@ export default makeScene2D(function* (view) {
             ]}
             />
             <Circle stroke={Colors.red} lineWidth={10} position={[-200, 0]}
-                size={[() => radiusSignal() * 100, () => radiusSignal() * 100]}
+                size={() => radiusSignal() * 100}
             />
             <Circle stroke={Colors.green} lineWidth={10} position={[200, 0]}
-                size={[() => radiusSignal() * 200, () => radiusSignal() * 200]}
+                size={() => radiusSignal() * 200}
             />
         </>,
     );
